@@ -15,8 +15,8 @@ return new class extends Migration
             $table->integer('payer');
             $table->integer('vat');
             $table->timestamp('due_on');
-            $table->string('is_vat');
-            $table->string('status');
+            $table->boolean('is_vat')->default(true);
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

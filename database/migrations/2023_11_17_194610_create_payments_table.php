@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('transaction_id');
             $table->double('amount', 8, 2);
             $table->timestamp('paid_on');
-            $table->string('details');
+            $table->string('details')->nullable();
             $table->timestamps();
             
         });

@@ -1,10 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+use App\Http\Requests\TransactionRequest;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use  App\Http\Controllers\Controller;
+use App\Http\Resources\TransactionResource;
 use Validator;
+
+
 
 class TransactionController extends Controller
 {
@@ -14,30 +18,39 @@ class TransactionController extends Controller
 
         $transactions = Transaction::get();
 
-        return $this->sendResponse($transactions , 'success data');
+        return $this->sendResponse(TransactionResource::collection($transactions) ,'transaction viewed successfully');
+
+    }
+
+    public function userTransactions()
+    {
+
+        $transactions = Transaction::where('payer',auth()->user()->id)->get();
+
+        return $this->sendResponse($transactions , 'transaction viewed successfully');
 
     }
 
     public function store(Request $request)
     {
+        
+         $validator = Validator::make($request->all(),[
 
-        $validator = Validator::make($request->all(), [
+                'amount'=>'required',
+                'payer' => 'required',
+                'due_on' => 'required|date_format:Y-m-d',
+                'vat' =>'required',
+                'is_vat'=>'required',
+         ]);
+   
+         if($validator->fails()) {
 
-             'amount' => 'required',
-             'payer' => 'required',
-             'due_on' => 'required',
-             'vat' =>'required',
-             'is_vat'=>'required',
-        ]);
+               return $this->sendError($validator->errors(),'خطأ فى التحقق' ,422);
+         }  
 
-        if ($validator->fails()) {
+         $transaction = Transaction::create($request->all());
 
-            return $this->sendError($validator->errors(),'خطأ فى التحقق' ,442);
-        }
-
-        $transaction = Transaction::create($request->all());
-
-        return $this->sendResponse($transaction , 'transaction added successfully');
+          return $this->sendResponse([], 'transaction added successfully');
 
     }
 

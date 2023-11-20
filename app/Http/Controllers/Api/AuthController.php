@@ -17,43 +17,45 @@ class AuthController extends Controller
         
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
 
-               $user = Auth::user();
-               $success['token'] =  $user->createToken('auth-token')->plainTextToken;
-               $success['id'] =  $user->id;
-               $success['name'] =  $user->name;
+              $user = Auth::user();
+              $success['token'] =  $user->createToken('auth-token')->plainTextToken;
+              $success['id'] =  $user->id;
+              $success['name'] =  $user->name;
 
-               return $this->sendResponse($success , 'messages.added_success');
+               return $this->sendResponse($success , 'data success');
           }
-          else{
+          
+         else{
 
-              return $this->sendError([], 'unauthorized',401);
-          }
+             return $this->sendError([], 'unauthorized',401);
+         }
     }
     
     public function createUser(Request $request)
     {
-          
+        
          $validator = Validator::make($request->all(),[
 
-              'name' => 'required',
-              'email' => 'required|email|unique:users,email,'.auth()->id(),
-              'password'=>'required',
-         ]);
- 
-         if($validator->fails()) {
-  
-              return $this->sendError($validator->errors(),'خطأ فى التحقق' ,442);
-          }
+               'name' => 'required',
+               'email' => 'required|email|unique:users,email,'.auth()->id(),
+               'password'=>'required',
+          ]);
+
+          if($validator->fails()) {
+
+               return $this->sendError($validator->errors(),'خطأ فى التحقق' ,422);
+          }  
 
           $user = User::create([
-
-               'name' => $request->name,
-               'email' => $request->email,
-               'user_type' =>'user',
-               'password' => Hash::make($request->password)
-           ]);
+            
+                'name' => $request->name,
+                'email' => $request->email,
+                'user_type' =>'user',
+                'password' => Hash::make($request->password)
+            ]);
 
             return $this->sendResponse(new UserResource($user), 'user generated successfully');
-       }
+    }  
+
 
 }

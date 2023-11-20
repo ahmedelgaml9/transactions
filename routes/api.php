@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\ReportController;
 Route::post('auth/login', [AuthController::class, 'login']);
 Route::post('auth/createuser', [AuthController::class, 'createUser']);
 
-Route::get('/usertransaction', [TransactionController::class, 'index'])->middleware('auth:sancitum');
+Route::get('mytransactions', [TransactionController::class, 'userTransactions'])->middleware('auth:sanctum');
 
 Route::prefix('admin')->middleware(['auth:sanctum','admin'])->group(function () {
 
