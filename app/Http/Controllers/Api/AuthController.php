@@ -34,11 +34,11 @@ class AuthController extends Controller
     public function createUser(Request $request)
     {
         
-         $validator = Validator::make($request->all(),[
+          $validator = Validator::make($request->all(),[
 
-               'name' => 'required',
-               'email' => 'required|email|unique:users,email,'.auth()->id(),
-               'password'=>'required',
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email,'.auth()->id(),
+                'password'=>'required',
           ]);
 
           if($validator->fails()) {
