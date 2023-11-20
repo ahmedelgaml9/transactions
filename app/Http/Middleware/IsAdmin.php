@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 
 
-class Admin
+class IsAdmin
 {
     
     public function handle(Request $request, Closure $next)
